@@ -13,7 +13,7 @@ object SentimentAnalysis {
   def main(args: Array[String]) {
     Logger.getLogger("org").setLevel(Level.ERROR)
 
-    val path = "/Users/alessandropavesi/Documents/Projects/UniBo/Languages and Algorithms for Artificial Intelligence/SentimentAnalysis/src/main/"
+    val path = "" // FILL WITH PATH
 
 
     val spark = SparkSession.builder
