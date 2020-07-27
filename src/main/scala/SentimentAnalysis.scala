@@ -124,15 +124,12 @@ object SentimentAnalysis {
 
         // train the model
         val model = trainer.fit(train)
-        // ID 922 has label 3 not 2
         // save model for later use
-        model.save(path + "resources/MLPModel/")
+        model.save(path + "resources/MLPModel2/")
         model
       }
 
-
     val model = getModel()
-
 
     // compute accuracy on the test set
     val result = model.transform(test)
@@ -142,7 +139,7 @@ object SentimentAnalysis {
       .setMetricName("accuracy")
       .setLabelCol("sentiment")
       .setPredictionCol("PredictedLabel")
-    //evaluator.evaluate(result.select("PredictedLabel"))
+
     println(s"Test set accuracy = ${evaluator.evaluate(predictionAndLabels)}")
 
     spark.stop()
