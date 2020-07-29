@@ -68,16 +68,6 @@ object SentimentAnalysis {
     val train = splits(0)
     val test = splits(1)
 
-//    val lr = new LogisticRegression()
-//      .setMaxIter(15000)
-//      .setLabelCol("sentiment")
-//      .setFeaturesCol("features")
-//
-//    // Fit the model
-//    val lrModel = lr.fit(train)
-//
-//    // Print the coefficients and intercept for logistic regression
-//    println(s"Coefficients: ${lrModel.coefficients} Intercept: ${lrModel.intercept}")
 
     // specify layers for the neural network:
     // input layer of size 4 (features), two intermediate of size 5 and 4
