@@ -48,8 +48,8 @@ object SentimentAnalysis {
     val countVectorizer = new CountVectorizer()
       .setInputCol("words")
       .setOutputCol("features")
-      .setVocabSize(1000)
-      .setMinDF(7.0)
+      .setVocabSize(5000)
+      .setMinDF(5.0)
       .setMinTF(1.0)
 
     val transformPipeline = new Pipeline()
@@ -84,6 +84,7 @@ object SentimentAnalysis {
         val numFeatures = train.first().getAs[SparseVector]("features").toArray.length
         val layers = Array[Int](
           numFeatures,
+          numFeatures / 2,
           2
         )
         // create the trainer and set its parameters
