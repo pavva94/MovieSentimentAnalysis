@@ -105,9 +105,9 @@ object SentimentAnalysis {
     )
 
     // check if there is an instance of MLP saved
-    def getModel(): MultilayerPerceptronClassificationModel =
-      if (Files.exists(Paths.get(path + "resources/MLPModel/"))) {
-        val model = MultilayerPerceptronClassificationModel.load(path + "resources/MLPModel/")
+    val model: MultilayerPerceptronClassificationModel =
+      if (Files.exists(Paths.get(path + "resources/MLPModel2/"))) {
+        val model = MultilayerPerceptronClassificationModel.load(path + "resources/MLPModel2/")
         print("Model loaded.")
         model
       } else {
@@ -128,8 +128,6 @@ object SentimentAnalysis {
         model.save(path + "resources/MLPModel2/")
         model
       }
-
-    val model = getModel()
 
     // compute accuracy on the test set
     val result = model.transform(test)
