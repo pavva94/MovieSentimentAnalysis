@@ -70,12 +70,15 @@ object SentimentAnalysis {
 
     // check if there is an instance of MLP saved
     val model: MultilayerPerceptronClassificationModel =
-      if (Files.exists(Paths.get(path + "resources/MLPModel2/"))) {
-        val model = MultilayerPerceptronClassificationModel.load(path + "resources/MLPModel2/")
-        print("Model loaded.")
+//      if (Files.exists(Paths.get(path + "resources/MLPModel2/"))) {
+      if (Files.exists(Paths.get("s3n://sentiment-analysis-data-2020/MLPModel2/"))) {
+//        val model = MultilayerPerceptronClassificationModel.load(path + "resources/MLPModel2/")
+        val model = MultilayerPerceptronClassificationModel.load("s3n://sentiment-analysis-data-2020/MLPModel2/")
+        print("Model loaded.\n")
         model
-      } else {
-        print("Model not found, training...")
+      } else
+          {
+        print("Model not found, training...\n")
 
         //network architecture, better to keep tuning it until metrics converge
         val numFeatures = train.first().getAs[SparseVector]("features").toArray.length
@@ -96,7 +99,8 @@ object SentimentAnalysis {
         // train the model
         val model = trainer.fit(train)
         // save model for later use
-        model.save(path + "resources/MLPModel2/")
+//        model.save(path + "resources/MLPModel2/")
+        model.save("s3://sentiment-analysis-data-2020/MLPModel2/")
         model
       }
 
