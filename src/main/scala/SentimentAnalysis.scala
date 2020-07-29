@@ -19,10 +19,6 @@ object SentimentAnalysis {
     val spark = SparkSession.builder
       .appName("Sentiment Analysis Classifier")
       .master("local[2]")
-      .config("spark.executor.memory", "8gb")
-      .config("spark.driver.memory", "8gb")
-      .config("spark.memory.offHeap.enabled", "true")
-      .config("spark.memory.offHeap.size","16gb ")
       .getOrCreate()
 
     // Replace Key with your AWS account key (You can find this on IAM
