@@ -21,14 +21,6 @@ object SentimentAnalysis {
       .master("local[2]")
       .getOrCreate()
 
-    // Replace Key with your AWS account key (You can find this on IAM
-//    spark.sparkContext
-//      .hadoopConfiguration.set("fs.s3n.access.key", "AKIARTV2LE4BZ26JARQG")
-//    // Replace Key with your AWS secret key (You can find this on IAM
-//    spark.sparkContext
-//      .hadoopConfiguration.set("fs.s3n.secret.key", "Rk+53PbE9KvVVigCe5F484zT/4OVDoy6cS4ALQLW")
-//    spark.sparkContext
-//      .hadoopConfiguration.set("fs.s3n.endpoint", "s3.amazonaws.com")
 
     val data = spark.read
       .option("header","true")
