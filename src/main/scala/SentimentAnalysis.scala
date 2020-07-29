@@ -68,20 +68,6 @@ object SentimentAnalysis {
     val train = splits(0)
     val test = splits(1)
 
-
-    // specify layers for the neural network:
-    // input layer of size 4 (features), two intermediate of size 5 and 4
-    // and output of size 3 (classes)
-//    val layers = Array[Int](3, 5, 4, 3)
-    //network architecture, better to keep tuning it until metrics converge
-    val numFeatures = train.first().getAs[SparseVector]("features").toArray.length
-    val layers = Array[Int](
-      numFeatures,
-      numFeatures / 2,
-      numFeatures / 4,
-      2
-    )
-
     // check if there is an instance of MLP saved
     val model: MultilayerPerceptronClassificationModel =
       if (Files.exists(Paths.get(path + "resources/MLPModel2/"))) {
@@ -90,6 +76,13 @@ object SentimentAnalysis {
         model
       } else {
         print("Model not found, training...")
+
+        //network architecture, better to keep tuning it until metrics converge
+        val numFeatures = train.first().getAs[SparseVector]("features").toArray.length
+        val layers = Array[Int](
+          numFeatures,
+          2
+        )
         // create the trainer and set its parameters
         val trainer = new MultilayerPerceptronClassifier()
           .setFeaturesCol("features")
