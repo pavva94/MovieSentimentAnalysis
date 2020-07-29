@@ -39,7 +39,7 @@ object SentimentAnalysis {
       .option("inferSchema","true")
       .format("csv")
       .load(path + "/resources/MovieReviewDataset.csv")
-//      .load("s3n://exam-lang-2020.s3.eu-west-3.amazonaws.com/AirQualityRoadsideFinal.csv")
+//      .load("s3n://exam-lang-2020.s3.eu-west-3.amazonaws.com/MovieReviewDataset.csv")
       .cache()
       .repartition(500)
       .na.drop()
