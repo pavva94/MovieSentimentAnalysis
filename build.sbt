@@ -1,4 +1,4 @@
-name := "SentimentAnalisys"
+name := "SentimentAnalysis"
 
 version := "0.1"
 
