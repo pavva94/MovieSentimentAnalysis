@@ -45,7 +45,6 @@ object SentimentAnalysis {
     println(!localMode)
     println(loadModel)
 
-    val path = "Documents/Projects/UniBo/LanguagesAndAlgorithmsForArtificialIntelligence/SentimentAnalysis/src/main/"   // FILL WITH PATH
 
 
     val spark = if (localMode) {
