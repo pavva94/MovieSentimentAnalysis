@@ -12,9 +12,8 @@ import org.apache.spark.sql.SparkSession
 
 object SentimentAnalysis {
   def main(args: Array[String]) {
-    Logger.getLogger("org").setLevel(Level.ERROR)
+//    Logger.getLogger("org").setLevel(Level.ERROR)
 
-    val path = "" // FILL WITH PATH
     // check args: Bad use of scala but i had to do in this way because args.toList on my cluster doesn't worked
     val loadModel: Boolean = {
       try {
@@ -45,7 +44,7 @@ object SentimentAnalysis {
     println(!localMode)
     println(loadModel)
 
-
+    val path = ""   // FILL WITH PATH
 
     val spark = if (localMode) {
       println("Local Mode selected")
