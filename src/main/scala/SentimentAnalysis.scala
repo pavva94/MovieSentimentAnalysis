@@ -68,9 +68,9 @@ object SentimentAnalysis {
     if (!localMode) {
       // AWS configuration
       spark.sparkContext
-        .hadoopConfiguration.set("fs.s3.access.key", "ASIA3XR2YR5TUZTF7BWQ")
+        .hadoopConfiguration.set("fs.s3.access.key", "")
       spark.sparkContext
-        .hadoopConfiguration.set("fs.s3.secret.key", "vK1KeTmmr41jY/ulGrg/4wZcLvTU1/kGnwJhmlku")
+        .hadoopConfiguration.set("fs.s3.secret.key", "")
       spark.sparkContext
         .hadoopConfiguration.set("fs.s3.endpoint", "s3.amazonaws.com")
     }
