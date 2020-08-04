@@ -1,12 +1,13 @@
-import java.nio.file.{Paths, Files}
+import java.lang.ArrayIndexOutOfBoundsException
+import java.nio.file.{Files, Paths}
 
-import org.apache.spark.ml.feature.{CountVectorizer, RegexTokenizer, StopWordsRemover}
-import org.apache.spark.sql.SparkSession
-import org.apache.spark.ml.classification.{MultilayerPerceptronClassifier, MultilayerPerceptronClassificationModel}
-import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
-import org.apache.spark.ml.Pipeline
 import org.apache.log4j._
+import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.classification.{MultilayerPerceptronClassificationModel, MultilayerPerceptronClassifier}
+import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
+import org.apache.spark.ml.feature.{CountVectorizer, RegexTokenizer, StopWordsRemover}
 import org.apache.spark.ml.linalg.SparseVector
+import org.apache.spark.sql.SparkSession
 
 
 object SentimentAnalysis {
@@ -14,6 +15,32 @@ object SentimentAnalysis {
     Logger.getLogger("org").setLevel(Level.ERROR)
 
     val path = "" // FILL WITH PATH
+    // check args: Bad use of scala but i had to do in this way because args.toList on my cluster doesn't worked
+    val loadModel: Boolean = {
+      try {
+        if (args(0) == "--loadModel")
+          args(1).toBoolean
+        else
+          false // default is training
+      } catch {
+        case ex: ArrayIndexOutOfBoundsException =>
+          println("Arguments missing")
+          false
+      }
+    }
+
+    val localMode: Boolean = {
+      try {
+        if (args(2) == "--localMode")
+          args(3).toBoolean
+        else
+          true // default is local mode
+      } catch {
+        case ex: ArrayIndexOutOfBoundsException =>
+          println("Arguments missing")
+          false
+      }
+    }
 
 
     val spark = SparkSession.builder
@@ -22,6 +49,8 @@ object SentimentAnalysis {
       .getOrCreate()
 
 
+    println(!localMode)
+    println(loadModel)
     val data = spark.read
       .option("header","true")
       .option("inferSchema","true")
