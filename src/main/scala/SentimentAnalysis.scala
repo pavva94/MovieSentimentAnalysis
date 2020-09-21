@@ -1,7 +1,6 @@
-import java.lang.ArrayIndexOutOfBoundsException
 import java.nio.file.{Files, Paths}
 
-import org.apache.log4j._
+import org.apache.log4j.{Level, Logger}
 import org.apache.spark.ml.Pipeline
 import org.apache.spark.ml.classification.{MultilayerPerceptronClassificationModel, MultilayerPerceptronClassifier}
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
@@ -125,18 +124,16 @@ object SentimentAnalysis {
     val train = splits(0)
     val test = splits(1)
 
+    val model_path = if (localMode) {"resources/MLPModel2/"} else {"s3n://sentiment-analysis-data-2020/MLPModel2/"}
+
     // check if there is an instance of MLP saved
     val model: MultilayerPerceptronClassificationModel =
 //      if (Files.exists(Paths.get(path + "resources/MLPModel2/"))) {
-      if (Files.exists(
-        Paths.get(
-          if (localMode) {path + "resources/MLPModel2/"}
-          else {"s3n://sentiment-analysis-data-2020/MLPModel2/"}
-        )) && loadModel)
+      if (Files.exists(Paths.get(path + model_path)) && loadModel)
       {  // THEN
 //        val model = MultilayerPerceptronClassificationModel.load()
         val model = MultilayerPerceptronClassificationModel.load(
-          if (localMode) {path + "resources/MLPModel2/"}
+          if (localMode) {path + model_path}
           else {"s3n://sentiment-analysis-data-2020/MLPModel2/"}
         )
         print("Model loaded.\n")
