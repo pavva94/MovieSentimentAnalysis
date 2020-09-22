@@ -11,7 +11,7 @@ import org.apache.spark.sql.SparkSession
 
 object SentimentAnalysis {
   def main(args: Array[String]) {
-//    Logger.getLogger("org").setLevel(Level.ERROR)
+    Logger.getLogger("org").setLevel(Level.ERROR)
 
     // check args: Bad use of scala but i had to do in this way because args.toList on my cluster doesn't worked
     val loadModel: Boolean = {
