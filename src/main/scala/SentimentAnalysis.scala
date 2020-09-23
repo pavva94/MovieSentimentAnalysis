@@ -7,16 +7,16 @@ object SentimentAnalysis {
     Logger.getLogger("org").setLevel(Level.ERROR)
 
     // check args: Bad use of scala but i had to do in this way because args.toList on my cluster doesn't worked
-    val loadModel: Boolean = {
+    val review: String = {
       try {
-        if (args(0) == "--loadModel")
-          args(1).toBoolean
+        if (args(0) == "--review")
+          args(1).toString
         else
-          false // default is training
+          "" // default is empty
       } catch {
         case ex: ArrayIndexOutOfBoundsException =>
-          println("Arguments missing")
-          false
+          println("Arguments missing: review. Using test review...")
+          "I loved this film."
       }
     }
 
@@ -59,11 +59,10 @@ object SentimentAnalysis {
     }
 
     println("Local Mode: " + localMode)
-    println("Load Model: " + loadModel)
 
     val estimator = new MovieSentimentAnalysisEstimator()
 
-    print(estimator.estimateReview("It seems like i loved it", localMode=true))
+    print(estimator.estimateReview(review = review, localMode = true))
 
   }
 }
