@@ -26,11 +26,20 @@ class MovieSentimentAnalysisEstimator {
         model
       }
 
-    println("Transform data..") // TODO Check existing of files
-    val transformPipeline = PipelineModel.load(
+    val transform_path =
       if (localMode) {path + "resources/TransformDataModel/"}
-      else {"s3n://sentiment-analysis-data-2020/TransformDataModel/"}
-    )
+      else {"s3n://sentiment-analysis-data-2020/Models/TransformDataModel/"}
+
+    println("Transform data..")
+    val transformPipeline = if (Files.exists(Paths.get(transform_path))) { // THEN
+        val pipeline = PipelineModel.load(transform_path)
+        print("Transform Model loaded.\n")
+        pipeline
+      } else { // ELSE
+        print("Transform Model not found, new training!\n")
+        val pipeline = new TransformData().createTransformPipeline(localMode = localMode)
+        pipeline
+      }
 
     val spark = if (localMode) {
       println("Local Mode selected")
