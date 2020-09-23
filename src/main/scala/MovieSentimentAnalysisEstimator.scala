@@ -9,17 +9,21 @@ class MovieSentimentAnalysisEstimator {
   def estimateReview(review: String, localMode:Boolean): Int = {
 
     val path = "Documents/Projects/UniBo/LanguagesAndAlgorithmsForArtificialIntelligence/SentimentAnalysis/src/main/"   // FILL WITH PATH
-    val model_path = if (localMode) {path + "resources/MLPModel2/"} else {"s3n://sentiment-analysis-data-2020/MLPModel2/"}
+
+    val model_path =
+      if (localMode) {path + "resources/MLPModel2/"}
+      else {"s3n://sentiment-analysis-data-2020/Models/MLPModel2/"}
 
     val model: MultilayerPerceptronClassificationModel =
-      if (Files.exists(Paths.get( model_path))) { // THEN
+      if (Files.exists(Paths.get(model_path))) { // THEN
         val model = MultilayerPerceptronClassificationModel.load(model_path)
         print("Model loaded.\n")
         model
       }
-      else {
-        print("Model not found, ERROR!\n")
-        return -1
+      else { // ELSE
+        print("Model not found, new training!\n")
+        val model = new MovieSentimentAnalysisTrainer().createEstimator(localMode)
+        model
       }
 
     println("Transform data..") // TODO Check existing of files
