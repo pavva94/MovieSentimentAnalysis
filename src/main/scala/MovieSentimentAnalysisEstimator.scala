@@ -8,7 +8,7 @@ class MovieSentimentAnalysisEstimator {
 
   def estimateReview(review: String, localMode:Boolean): Int = {
 
-    val path = "Documents/Projects/UniBo/LanguagesAndAlgorithmsForArtificialIntelligence/SentimentAnalysis/src/main/"   // FILL WITH PATH
+    val path = ""   // FILL WITH PATH
 
     val model_path =
       if (localMode) {path + "resources/MLPModel2/"}
