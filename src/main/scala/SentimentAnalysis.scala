@@ -12,7 +12,8 @@ object SentimentAnalysis {
         if (args(0) == "--review")
           args(1).toString
         else
-          "" // default is empty
+          println("Arguments missing: review. Using test review...")
+          "I loved this film."
       } catch {
         case ex: ArrayIndexOutOfBoundsException =>
           println("Arguments missing: review. Using test review...")
@@ -20,16 +21,20 @@ object SentimentAnalysis {
       }
     }
 
+    println("Review to be analysed:" + review)
+
     val localMode: Boolean = {
       try {
         if (args(2) == "--localMode")
           args(3).toBoolean
-        else
+        else {
+          print("Default mode il Local Mode")
           true // default is local mode
+        }
       } catch {
         case ex: ArrayIndexOutOfBoundsException =>
-          println("Arguments missing")
-          false
+          println("Arguments missing: local mode. Using default true...")
+          true
       }
     }
 
@@ -62,7 +67,7 @@ object SentimentAnalysis {
 
     val estimator = new MovieSentimentAnalysisEstimator()
 
-    print(estimator.estimateReview(review = review, localMode = true))
+    print(estimator.estimateReview(review = review, localMode = localMode))
 
   }
 }
