@@ -1,11 +1,11 @@
-import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
+import org.apache.spark.ml.classification.{MultilayerPerceptronClassificationModel, MultilayerPerceptronClassifier}
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.linalg.SparseVector
 import org.apache.spark.sql.SparkSession
 
 class MovieSentimentAnalysisTrainer {
 
-  def createEstimator(localMode: Boolean, loadModel: Boolean): Unit = {
+  def createEstimator(localMode: Boolean): MultilayerPerceptronClassificationModel = {
 
     val path = "Documents/Projects/UniBo/LanguagesAndAlgorithmsForArtificialIntelligence/SentimentAnalysis/src/main/"   // FILL WITH PATH
 
@@ -67,7 +67,7 @@ class MovieSentimentAnalysisTrainer {
     val train = splits(0)
     val test = splits(1)
 
-    val model_path = if (localMode) {"resources/MLPModel2/"} else {"s3n://sentiment-analysis-data-2020/MLPModel2/"}
+    val model_path = if (localMode) {"resources/MLPModel2/"} else {"s3n://sentiment-analysis-data-2020/Models/MLPModel2/"}
 
     print("Training...\n")
 
@@ -109,6 +109,8 @@ class MovieSentimentAnalysisTrainer {
     println(s"Test set accuracy = ${evaluator.evaluate(predictionAndLabels)}")
 
     spark.stop()
+
+    model
 
   }
 }
