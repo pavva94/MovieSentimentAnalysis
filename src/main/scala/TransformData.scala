@@ -80,7 +80,9 @@ class TransformData {
     println("Fit pipeline..")
     val tp = transformPipeline.fit(data)
 
-    val model_path = if (localMode) {path + "resources/TransformDataModel/"} else {"s3n://sentiment-analysis-data-2020/TransformDataModel/"}
+    val model_path =
+      if (localMode) {path + "resources/TransformDataModel/"}
+      else {"s3n://sentiment-analysis-data-2020/Models/TransformDataModel/"}
 
     tp.save(model_path)
 
