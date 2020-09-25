@@ -1,5 +1,3 @@
-import java.nio.file.{Files, Paths}
-
 import org.apache.spark.ml.PipelineModel
 import org.apache.spark.ml.classification.MultilayerPerceptronClassificationModel
 import org.apache.spark.sql.SparkSession
@@ -7,39 +5,6 @@ import org.apache.spark.sql.SparkSession
 class MovieSentimentAnalysisEstimator {
 
   def estimateReview(review: String, localMode:Boolean): Int = {
-
-    val path = ""   // FILL WITH PATH
-
-    val model_path =
-      if (localMode) {path + "resources/MLPModel2/"}
-      else {"s3n://sentiment-analysis-data-2020/Models/MLPModel2/"}
-
-    val model: MultilayerPerceptronClassificationModel =
-      if (Files.exists(Paths.get(model_path))) { // THEN
-        val model = MultilayerPerceptronClassificationModel.load(model_path)
-        print("Model loaded.\n")
-        model
-      }
-      else { // ELSE
-        print("Model not found, new training!\n")
-        val model = new MovieSentimentAnalysisTrainer().createEstimator(localMode)
-        model
-      }
-
-    val transform_path =
-      if (localMode) {path + "resources/TransformDataModel/"}
-      else {"s3n://sentiment-analysis-data-2020/Models/TransformDataModel/"}
-
-    println("Transform data..")
-    val transformPipeline = if (Files.exists(Paths.get(transform_path))) { // THEN
-        val pipeline = PipelineModel.load(transform_path)
-        print("Transform Model loaded.\n")
-        pipeline
-      } else { // ELSE
-        print("Transform Model not found, new training!\n")
-        val pipeline = new TransformData().createTransformPipeline(localMode = localMode)
-        pipeline
-      }
 
     val spark = if (localMode) {
       println("Local Mode selected")
@@ -57,6 +22,46 @@ class MovieSentimentAnalysisEstimator {
     }
     import spark.implicits._
 
+    val path = "Documents/Projects/UniBo/LanguagesAndAlgorithmsForArtificialIntelligence/SentimentAnalysis/src/main/"   // FILL WITH PATH
+
+    val transform_path =
+      if (localMode) {path + "resources/TransformDataModel/"}
+      else {"s3n://sentiment-analysis-data-2020/Models/TransformDataModel/"}
+
+    println(transform_path)
+
+    println("Transform data..")
+    val transformPipeline =
+      try {
+        val pipeline = PipelineModel.load(transform_path)
+        print("Transform Model loaded.\n")
+        pipeline
+      } catch {
+        case ex: Exception => {
+          print("Transform Model not found, new training!\n")
+          val pipeline = new TransformData().createTransformPipeline(localMode = localMode)
+          pipeline
+        }
+      }
+
+    val model_path =
+      if (localMode) {path + "resources/MLPModel2/"}
+      else {"s3n://sentiment-analysis-data-2020/Models/MLPModel2/"}
+
+    println(model_path)
+
+    val model: MultilayerPerceptronClassificationModel =
+      try {
+        val model = MultilayerPerceptronClassificationModel.load(model_path)
+        print("MLP Model loaded.\n")
+        model
+      } catch {
+        case ex: Exception =>
+          print("MLP Model not found, new training!\n")
+          val model = new MovieSentimentAnalysisTrainer().createEstimator(localMode = localMode)
+          model
+      }
+
     val testDF = List(review).toDF("review")
 
     val finalData = transformPipeline.transform(testDF)
@@ -68,7 +73,7 @@ class MovieSentimentAnalysisEstimator {
     else
       println("Your review has a POSITIVE sentiment")
 
-    spark.stop()
+//    spark.stop()
     predictedReview
   }
 }
