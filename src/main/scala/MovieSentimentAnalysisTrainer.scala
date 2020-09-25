@@ -1,3 +1,4 @@
+import org.apache.spark.ml.PipelineModel
 import org.apache.spark.ml.classification.{MultilayerPerceptronClassificationModel, MultilayerPerceptronClassifier}
 import org.apache.spark.ml.evaluation.MulticlassClassificationEvaluator
 import org.apache.spark.ml.linalg.SparseVector
@@ -54,9 +55,24 @@ class MovieSentimentAnalysisTrainer {
 
     data.printSchema()
 
-    val transformPipeline = new TransformData().createTransformPipeline(localMode)
+    val transform_path =
+      if (localMode) {path + "resources/TransformDataModel/"}
+      else {"s3n://sentiment-analysis-data-2020/Models/TransformDataModel/"}
 
     println("Transform data..")
+    val transformPipeline =
+      try {
+        val pipeline = PipelineModel.load(transform_path)
+        print("Transform Model loaded.\n")
+        pipeline
+      } catch {
+        case ex: Exception => {
+          print("Transform Model not found, new training!\n")
+          val pipeline = new TransformData().createTransformPipeline(localMode = localMode)
+          pipeline
+        }
+      }
+
     val finalData = transformPipeline.transform(data)
 
     val dataset = finalData.select("features", "sentiment")
@@ -90,6 +106,8 @@ class MovieSentimentAnalysisTrainer {
 
     // train the model
     val model = trainer.fit(train)
+
+    println("Training finished, saving model...")
     // save model for later use
     model.save(model_path)
 
@@ -108,7 +126,7 @@ class MovieSentimentAnalysisTrainer {
 
     println(s"Test set accuracy = ${evaluator.evaluate(predictionAndLabels)}")
 
-    spark.stop()
+//    spark.stop()
 
     model
 
