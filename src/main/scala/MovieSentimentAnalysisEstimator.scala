@@ -7,14 +7,14 @@ class MovieSentimentAnalysisEstimator {
   def estimateReview(review: String, localMode:Boolean): Int = {
 
     val spark = if (localMode) {
-      println("Local Mode selected")
+//      println("Local Mode selected")
       // session for local distributed cluster
       SparkSession.builder
         .appName("Sentiment Analysis Classifier")
         .master("spark://MBPdiAlessandro.homenet.telecomitalia.it:7077")
         .getOrCreate()
     } else {
-      println("AWS Mode selected")
+//      println("AWS Mode selected")
       // session for AWS
       SparkSession.builder
         .appName("Sentiment Analysis Classifier")
@@ -22,13 +22,11 @@ class MovieSentimentAnalysisEstimator {
     }
     import spark.implicits._
 
-    val path = "Documents/Projects/UniBo/LanguagesAndAlgorithmsForArtificialIntelligence/SentimentAnalysis/src/main/"   // FILL WITH PATH
+    val path = ""   // FILL WITH PATH
 
     val transform_path =
       if (localMode) {path + "resources/TransformDataModel/"}
       else {"s3n://sentiment-analysis-data-2020/Models/TransformDataModel/"}
-
-    println(transform_path)
 
     println("Transform data..")
     val transformPipeline =
@@ -48,8 +46,6 @@ class MovieSentimentAnalysisEstimator {
       if (localMode) {path + "resources/MLPModel2/"}
       else {"s3n://sentiment-analysis-data-2020/Models/MLPModel2/"}
 
-    println(model_path)
-
     val model: MultilayerPerceptronClassificationModel =
       try {
         val model = MultilayerPerceptronClassificationModel.load(model_path)
@@ -67,6 +63,7 @@ class MovieSentimentAnalysisEstimator {
     val finalData = transformPipeline.transform(testDF)
     val dataset = finalData.select("features")
     val result = model.transform(dataset)
+
     val predictedReview: Int = result.select("PredictedLabel").first().getDouble(0).toInt
     if (predictedReview == 0)
       println("Your review has a NEGATIVE sentiment")

@@ -10,7 +10,6 @@ object SentimentAnalysis {
     val review: String = {
       try {
         if (args(0) == "--review") {
-          println(args(1).toString)
           args(1).toString
         } else {
           println("Argument error: review. Using test review...")
@@ -66,11 +65,9 @@ object SentimentAnalysis {
         .hadoopConfiguration.set("fs.s3.endpoint", "s3.amazonaws.com")
     }
 
-    println("Local Mode: " + localMode)
-
     val estimator = new MovieSentimentAnalysisEstimator()
 
-    print(estimator.estimateReview(review = review, localMode = localMode))
+//    print(estimator.estimateReview(review = review, localMode = localMode))
 
   }
 }

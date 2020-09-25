@@ -8,10 +8,10 @@ class MovieSentimentAnalysisTrainer {
 
   def createEstimator(localMode: Boolean): MultilayerPerceptronClassificationModel = {
 
-    val path = "Documents/Projects/UniBo/LanguagesAndAlgorithmsForArtificialIntelligence/SentimentAnalysis/src/main/"   // FILL WITH PATH
+    val path = ""   // FILL WITH PATH
 
     val spark = if (localMode) {
-      println("Local Mode selected")
+//      println("Local Mode selected")
       // session for local distributed cluster
       SparkSession.builder
         .appName("Sentiment Analysis Classifier")
@@ -22,7 +22,7 @@ class MovieSentimentAnalysisTrainer {
       //      .config("spark.memory.offHeap.enabled", "true")
       //      .config("spark.memory.offHeap.size","16gb ")
     } else {
-      println("AWS Mode selected")
+//      println("AWS Mode selected")
       // session for AWS
       SparkSession.builder
         .appName("Sentiment Analysis Classifier")
@@ -32,9 +32,9 @@ class MovieSentimentAnalysisTrainer {
     if (!localMode) {
       // AWS configuration
       spark.sparkContext
-        .hadoopConfiguration.set("fs.s3.access.key", "ASIA3XR2YR5TUZTF7BWQ")
+        .hadoopConfiguration.set("fs.s3.access.key", "")
       spark.sparkContext
-        .hadoopConfiguration.set("fs.s3.secret.key", "vK1KeTmmr41jY/ulGrg/4wZcLvTU1/kGnwJhmlku")
+        .hadoopConfiguration.set("fs.s3.secret.key", "")
       spark.sparkContext
         .hadoopConfiguration.set("fs.s3.endpoint", "s3.amazonaws.com")
     }
@@ -113,7 +113,7 @@ class MovieSentimentAnalysisTrainer {
 
     println()
     println()
-    println("The model is created and saved in:" + model_path)
+    println("The model is saved in:" + model_path)
 
     // compute accuracy on the test set
     val result = model.transform(test)
