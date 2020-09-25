@@ -64,12 +64,9 @@ class TransformData {
     val countVectorizer = new CountVectorizer()
       .setInputCol("words")
       .setOutputCol("features")
-      .setVocabSize(
-        if (localMode) {1000}
-        else {5000}
-      )
+      .setVocabSize(1000)
       .setMinDF(5.0)
-      .setMinTF(1.0)
+      .setMinTF(2.0)
 
     val transformPipeline = new Pipeline()
       .setStages(Array(
