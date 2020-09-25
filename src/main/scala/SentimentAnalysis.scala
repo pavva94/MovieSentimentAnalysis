@@ -9,19 +9,22 @@ object SentimentAnalysis {
     // check args: Bad use of scala but i had to do in this way because args.toList on my cluster doesn't worked
     val review: String = {
       try {
-        if (args(0) == "--review")
+        if (args(0) == "--review") {
+          println(args(1).toString)
           args(1).toString
-        else
-          println("Arguments missing: review. Using test review...")
-          "I loved this film."
+        } else {
+          println("Argument error: review. Using test review...")
+          "I loved this film. But there is an error."
+        }
       } catch {
-        case ex: ArrayIndexOutOfBoundsException =>
+        case ex: ArrayIndexOutOfBoundsException => {
           println("Arguments missing: review. Using test review...")
           "I loved this film."
+        }
       }
     }
 
-    println("Review to be analysed:" + review)
+    println("Review to be analysed: \"" + review + "\"")
 
     val localMode: Boolean = {
       try {
